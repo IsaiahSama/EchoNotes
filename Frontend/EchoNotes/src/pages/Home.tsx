@@ -1,22 +1,22 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem, IonList, IonRouterOutlet } from '@ionic/react';
 import './Home.css';
+import AudioContainer from '../components/AudioContainer';
 
 const Home: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Blank</IonTitle>
+          <IonTitle>Echo Notes</IonTitle>
+          <IonList slot="end">
+            <IonItem >Login / Sign Up</IonItem>
+          </IonList>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Blank</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer />
+      <IonContent className='ion-padding'>
+        <p>Welcome to Echo Notes. Press buttons and hope for the best</p>
+        <hr />
+        <AudioContainer />
       </IonContent>
     </IonPage>
   );
