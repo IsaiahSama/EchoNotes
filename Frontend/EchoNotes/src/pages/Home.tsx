@@ -1,6 +1,7 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem, IonList, IonRouterOutlet } from '@ionic/react';
 import './Home.css';
 import AudioContainer from '../components/AudioContainer';
+import TranscriptContainer from '../components/TranscriptContainer';
 
 const Home: React.FC = () => {
   return (
@@ -16,7 +17,7 @@ const Home: React.FC = () => {
       <IonContent className='ion-padding'>
         <p>Welcome to Echo Notes. Press buttons and hope for the best</p>
         <hr />
-        <AudioContainer />
+        <TranscriptContainer />
       </IonContent>
     </IonPage>
   );
