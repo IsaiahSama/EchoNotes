@@ -21,15 +21,22 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import AudioContainer from './components/AudioContainer';
+import TranscriptContainer from './components/TranscriptContainer';
+import HeaderContainer from './components/HeaderContainer';
 
 setupIonicReact();
 
 const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
+      <HeaderContainer />
       <IonRouterOutlet>
         <Route exact path="/home">
-          <Home />
+          <AudioContainer />
+        </Route>
+        <Route exact path="/home/transcribed">
+          <TranscriptContainer />
         </Route>
         <Route exact path="/">
           <Redirect to="/home" />

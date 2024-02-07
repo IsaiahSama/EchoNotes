@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IonButton, IonIcon, IonProgressBar } from "@ionic/react";
+import { IonButton, IonContent, IonIcon, IonProgressBar } from "@ionic/react";
 
 import {cloudUpload} from 'ionicons/icons'
 
@@ -33,6 +33,9 @@ const AudioContainer: React.FC<ContainerProps> = () => {
                 <IonButton onClick={uploadAudio} disabled={isUploaded == 0 ? false : true}>
                     <IonIcon icon={cloudUpload} slot="start"/>
                     Upload Audio
+                </IonButton>
+                <IonButton routerLink="/home/transcribed" disabled={isUploaded == 2 ? false : true}>
+                    Go to Transcription
                 </IonButton>
             </div>
         </div>
