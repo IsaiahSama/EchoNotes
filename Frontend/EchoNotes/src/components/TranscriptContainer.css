@@ -31,10 +31,16 @@
   margin-bottom: 0.2em;
 }
 
+.transcriptContainer__left{
+  height: 100%;
+}
+
 .transcriptContainer__chat_area{
   background: #161616;
   padding: 0.7em;
   border-radius: 1%;
+  max-height: 60%;
+  overflow-y: scroll;
 }
 
 .message{

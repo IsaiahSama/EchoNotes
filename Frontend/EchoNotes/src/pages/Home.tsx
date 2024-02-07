@@ -18,6 +18,7 @@ const Home: React.FC = () => {
         <p>Welcome to Echo Notes. Press buttons and hope for the best</p>
         <hr />
         <TranscriptContainer />
+        {/* <AudioContainer /> */}
       </IonContent>
     </IonPage>
   );
