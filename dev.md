@@ -14,3 +14,16 @@ Frontend should sport an SPA (Single Page Application) making use of React and R
     4. LLM Interface for modifying transcription
 
 [Wireframe 1](https://wireframe.cc/LQm5JQ)
+
+## Backend Design
+Backend should be responsibe for the following tasks:
+
+- User Identification (Probably Session Storage)
+- Transcription Service
+- LLM Service
+- Database Connection
+
+### Endpoints
+- Login / Sign Up
+- Transcription (Accepts an audio stream)
+- LLM Service (Will use websockets for conversation)
