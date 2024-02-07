@@ -17,8 +17,8 @@ const Home: React.FC = () => {
       <IonContent className='ion-padding'>
         <p>Welcome to Echo Notes. Press buttons and hope for the best</p>
         <hr />
-        <TranscriptContainer />
-        {/* <AudioContainer /> */}
+        {/* <TranscriptContainer /> */}
+        <AudioContainer />
       </IonContent>
     </IonPage>
   );
