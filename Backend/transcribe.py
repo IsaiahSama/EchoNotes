@@ -8,9 +8,10 @@ def recognize(audio_file):
     AUDIO_FILE = f"./Audios/{audio_file}"
 
     if path.exists("./Audios/output.wav"):
-        remove("./Audios/output.wav")
+        # remove("./Audios/output.wav")
+        pass
 
-    system(fr"ffmpeg -i {AUDIO_FILE} ./Audios/output.wav")
+    # system(fr"/ffmpeg/bin/ffmpeg.exe -i {AUDIO_FILE} ./Audios/output.wav")
 
     if audio_file != "test.mp3":
         remove(AUDIO_FILE)
@@ -31,4 +32,8 @@ def recognize(audio_file):
     return {"text": text}
 
 if __name__ == "__main__":
-    recognize("test.mp3")
+    res = recognize("test.mp3")
+    if "text" in res:
+        print(res)
+    else:
+        print(res['error'])
