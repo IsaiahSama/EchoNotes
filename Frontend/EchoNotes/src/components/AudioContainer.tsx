@@ -34,7 +34,7 @@ const AudioContainer: React.FC<ContainerProps> = () => {
         let state = UploadState.Failed
         try {
             const result = await FilePicker.pickFiles({
-                "types": ["audio/mp3"]
+                "types": ["audio/wav"]
             })
             const file = result.files[0]
 
@@ -46,7 +46,6 @@ const AudioContainer: React.FC<ContainerProps> = () => {
                 })
 
                 formData.append('audio_file', rawFile, file.name)
-                console.log(formData)
                 state = UploadState.Success
             }
 
@@ -57,8 +56,6 @@ const AudioContainer: React.FC<ContainerProps> = () => {
 
             const res = await fetch(url + "v1/transcribe/", options)
             let res_json = await res.json()
-
-            console.log(res_json)
 
         } catch (error) {
             console.log(error)
