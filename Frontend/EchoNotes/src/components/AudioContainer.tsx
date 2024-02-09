@@ -17,22 +17,33 @@ const AudioContainer: React.FC<ContainerProps> = () => {
 
     const uploadAudio  = async () => {
         setUploaded(1)
-        let state = 2
+        let state = 3
         try {
             const result = await FilePicker.pickFiles({
                 "types": ["audio/mp3"]
             })
-            console.log(result)
+            const file = result.files[0]
+
+            const formData = new FormData()
+
+            if (file.blob) {
+                const rawFile = new File([file.blob], file.name, {
+                    type: file.mimeType,
+                })
+
+                formData.append('file', rawFile, file.name)
+                console.log(formData)
+                state = 2
+            }
+
         } catch (error) {
             console.log(error)
-            state = 3
         }
         finally{
             setTimeout(()=> {
                 setUploaded(state)
             }, 2000)
         }
-        
     }
 
     return (
