@@ -5,6 +5,7 @@ import {cloudUpload} from 'ionicons/icons'
 
 import "./AudioContainer.css"
 import '@ionic/react/css/core.css';
+import { FilePicker } from "@capawesome/capacitor-file-picker";
 
 interface ContainerProps { }
 
@@ -14,12 +15,21 @@ const AudioContainer: React.FC<ContainerProps> = () => {
 
     const messages = [<h2>No Audio Uploaded</h2>, <IonProgressBar type="indeterminate"></IonProgressBar>, <h2>Audio Uploaded Successfully</h2>]
 
-    const uploadAudio  = () => {
+    const uploadAudio  = async () => {
         setUploaded(1)
 
-        setTimeout(() => {
+        try {
+            const result = await FilePicker.pickFiles({
+                "types": ["audio/mp3"]
+            })
+            console.log(result)
+        } catch (error) {
+            console.log(error)
+        }
+        finally{
             setUploaded(2)
-        }, 4000)
+        }
+        
     }
 
     return (
@@ -53,11 +63,6 @@ const AudioContainer: React.FC<ContainerProps> = () => {
                             <IonItem>Lorem</IonItem> 
                             <IonItem>Ipsum</IonItem> 
                             <IonItem>Dolor</IonItem> 
-                            <IonItem>Emmet</IonItem> 
-                            <IonItem>Emmet</IonItem> 
-                            <IonItem>Emmet</IonItem> 
-                            <IonItem>Emmet</IonItem> 
-                            <IonItem>Emmet</IonItem> 
                             <IonItem>Emmet</IonItem> 
                             <IonItem>Emmet</IonItem> 
                         </IonList>
