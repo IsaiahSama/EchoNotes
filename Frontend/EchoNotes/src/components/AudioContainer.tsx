@@ -13,6 +13,8 @@ const AudioContainer: React.FC<ContainerProps> = () => {
 
     const [isUploaded, setUploaded] = useState(0)
 
+    const url = "http://127.0.0.1:8000/"
+
     const messages = [<h2>No Audio Uploaded</h2>, <IonProgressBar type="indeterminate"></IonProgressBar>, <h2>Audio Uploaded Successfully</h2>, <h2>Audio Could not be uploaded.</h2>]
 
     const uploadAudio  = async () => {
@@ -35,6 +37,17 @@ const AudioContainer: React.FC<ContainerProps> = () => {
                 console.log(formData)
                 state = 2
             }
+
+            const options = {
+                method: "POST",
+                headers: {"Content-Type": "audio/mpeg"},
+                body: formData
+            }
+
+            const res = await fetch(url + "v1/transcribe/", options)
+            let res_json = res.json()
+
+            console.log(res_json)
 
         } catch (error) {
             console.log(error)
