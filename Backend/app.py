@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile
+from transcribe import recognize
 
 app = FastAPI()
 
@@ -15,8 +16,10 @@ async def register():
     pass 
 
 @app.post("/v1/transcribe/")
-async def transcribe():
-    pass
+async def transcribe(audioFile: UploadFile):
+    file = audioFile.file
+    results = recognize(file)
+    return results
 
 @app.get("/v1/converse/")
 async def converse():
