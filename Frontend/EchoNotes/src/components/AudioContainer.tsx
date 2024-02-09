@@ -11,15 +11,27 @@ interface ContainerProps { }
 
 const AudioContainer: React.FC<ContainerProps> = () => {
 
-    const [isUploaded, setUploaded] = useState(0)
-
     const url = "http://127.0.0.1:8000/"
 
-    const messages = [<h2>No Audio Uploaded</h2>, <IonProgressBar type="indeterminate"></IonProgressBar>, <h2>Audio Uploaded Successfully</h2>, <h2>Audio Could not be uploaded.</h2>]
+    enum UploadState {
+        NotUploaded,
+        Uploading,
+        Success,
+        Failed
+    }
+
+    const [isUploaded, setUploaded] = useState(UploadState.NotUploaded)
+
+    const messages = {
+        [UploadState.NotUploaded]: <h2>No Audio Uploaded</h2>,
+        [UploadState.Uploading]: <IonProgressBar type="indeterminate"></IonProgressBar>,
+        [UploadState.Success]: <h2>Audio Uploaded Successfully</h2>,
+        [UploadState.Failed]: <h2>Audio Could not be uploaded.</h2>
+    }
 
     const uploadAudio  = async () => {
-        setUploaded(1)
-        let state = 3
+        setUploaded(UploadState.Uploading)
+        let state = UploadState.Failed
         try {
             const result = await FilePicker.pickFiles({
                 "types": ["audio/mp3"]
@@ -35,7 +47,7 @@ const AudioContainer: React.FC<ContainerProps> = () => {
 
                 formData.append('audio_file', rawFile, file.name)
                 console.log(formData)
-                state = 2
+                state = UploadState.Success
             }
 
             const options = {
@@ -50,6 +62,9 @@ const AudioContainer: React.FC<ContainerProps> = () => {
 
         } catch (error) {
             console.log(error)
+            setTimeout(() => {
+                setUploaded(UploadState.NotUploaded)
+            }, 2000)
         }
         finally{
             setTimeout(()=> {
@@ -66,16 +81,14 @@ const AudioContainer: React.FC<ContainerProps> = () => {
                     <div className="audioContainer__inner">
                         <div className="inner_content">
                             <div className="audioContainer__info">
-                                {
-                                    isUploaded == 0 ? messages[0] : messages[isUploaded]
-                                }
+                                {messages[isUploaded]}
                             </div>
                             <div className="buttons">
-                                <IonButton onClick={uploadAudio} disabled={isUploaded == 0 || isUploaded == 3 ? false : true}>
+                                <IonButton onClick={uploadAudio} disabled={isUploaded === UploadState.NotUploaded ? false : true}>
                                     <IonIcon icon={cloudUpload} slot="start"/>
                                     Upload Audio
                                 </IonButton>
-                                <IonButton routerLink="/home/transcribed" disabled={isUploaded == 2 ? false : true}>
+                                <IonButton routerLink="/home/transcribed" disabled={isUploaded === UploadState.Success ? false : true}>
                                     Go to Transcription
                                 </IonButton>
                             </div>
