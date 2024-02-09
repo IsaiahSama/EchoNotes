@@ -33,19 +33,18 @@ const AudioContainer: React.FC<ContainerProps> = () => {
                     type: file.mimeType,
                 })
 
-                formData.append('file', rawFile, file.name)
+                formData.append('audio_file', rawFile, file.name)
                 console.log(formData)
                 state = 2
             }
 
             const options = {
                 method: "POST",
-                headers: {"Content-Type": "audio/mpeg"},
                 body: formData
             }
 
             const res = await fetch(url + "v1/transcribe/", options)
-            let res_json = res.json()
+            let res_json = await res.json()
 
             console.log(res_json)
 
