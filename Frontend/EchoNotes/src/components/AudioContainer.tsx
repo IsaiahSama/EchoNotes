@@ -13,11 +13,11 @@ const AudioContainer: React.FC<ContainerProps> = () => {
 
     const [isUploaded, setUploaded] = useState(0)
 
-    const messages = [<h2>No Audio Uploaded</h2>, <IonProgressBar type="indeterminate"></IonProgressBar>, <h2>Audio Uploaded Successfully</h2>]
+    const messages = [<h2>No Audio Uploaded</h2>, <IonProgressBar type="indeterminate"></IonProgressBar>, <h2>Audio Uploaded Successfully</h2>, <h2>Audio Could not be uploaded.</h2>]
 
     const uploadAudio  = async () => {
         setUploaded(1)
-
+        let state = 2
         try {
             const result = await FilePicker.pickFiles({
                 "types": ["audio/mp3"]
@@ -25,9 +25,12 @@ const AudioContainer: React.FC<ContainerProps> = () => {
             console.log(result)
         } catch (error) {
             console.log(error)
+            state = 3
         }
         finally{
-            setUploaded(2)
+            setTimeout(()=> {
+                setUploaded(state)
+            }, 2000)
         }
         
     }
@@ -45,7 +48,7 @@ const AudioContainer: React.FC<ContainerProps> = () => {
                                 }
                             </div>
                             <div className="buttons">
-                                <IonButton onClick={uploadAudio} disabled={isUploaded == 0 ? false : true}>
+                                <IonButton onClick={uploadAudio} disabled={isUploaded == 0 || isUploaded == 3 ? false : true}>
                                     <IonIcon icon={cloudUpload} slot="start"/>
                                     Upload Audio
                                 </IonButton>
