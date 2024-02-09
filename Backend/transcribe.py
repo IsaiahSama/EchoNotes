@@ -14,7 +14,7 @@ def recognize(audio_stream: SpooledTemporaryFile) -> dict:
         Dict indicating status of translation"""
     
     r = sr.Recognizer()
-    with sr.AudioFile("./Audios/output.wav") as source:
+    with sr.AudioFile(audio_stream) as source:
         audio = r.record(source)
 
     try:
