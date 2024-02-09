@@ -2,25 +2,21 @@
 
 import speech_recognition as sr
 
-from os import system, path, remove
+from tempfile import SpooledTemporaryFile
 
-def recognize(audio_file):
-    AUDIO_FILE = f"./Audios/{audio_file}"
-
-    if path.exists("./Audios/output.wav"):
-        # remove("./Audios/output.wav")
-        pass
-
-    # system(fr"/ffmpeg/bin/ffmpeg.exe -i {AUDIO_FILE} ./Audios/output.wav")
-
-    if audio_file != "test.mp3":
-        remove(AUDIO_FILE)
-
+def recognize(audio_stream: SpooledTemporaryFile) -> dict:
+    """Function used to attempt to turn an audio recording into a transcript.
+    
+    Args:
+        audio_stream (SpooledTemporaryFile): The audio source to process.
+        
+    Returns:
+        Dict indicating status of translation"""
+    
     r = sr.Recognizer()
     with sr.AudioFile("./Audios/output.wav") as source:
         audio = r.record(source)
 
-    text = ""
     try:
        text =  r.recognize_google(audio)
     except sr.UnknownValueError:
