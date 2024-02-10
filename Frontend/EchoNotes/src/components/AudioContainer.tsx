@@ -16,7 +16,8 @@ const AudioContainer: React.FC<ContainerProps> = () => {
         NotUploaded,
         Uploading,
         Success,
-        Failed
+        Failed,
+        ServerFailed
     }
 
     const transcriptContext = useContext(TranscriptContext)
@@ -33,7 +34,8 @@ const AudioContainer: React.FC<ContainerProps> = () => {
         [UploadState.NotUploaded]: <h2>No Audio Uploaded</h2>,
         [UploadState.Uploading]: <IonProgressBar type="indeterminate"></IonProgressBar>,
         [UploadState.Success]: <h2>Audio Uploaded Successfully</h2>,
-        [UploadState.Failed]: <h2>Audio Could not be uploaded.</h2>
+        [UploadState.Failed]: <h2>Audio Could not be uploaded.</h2>,
+        [UploadState.ServerFailed]: <h2>Audio could not be recognized. Try again.</h2>
     }
 
     const uploadAudio  = async () => {
@@ -53,7 +55,6 @@ const AudioContainer: React.FC<ContainerProps> = () => {
                 })
 
                 formData.append('audio_file', rawFile, file.name)
-                state = UploadState.Success
             }
 
             const options = {
@@ -64,11 +65,18 @@ const AudioContainer: React.FC<ContainerProps> = () => {
             const res = await fetch(url + "v1/transcribe/", options)
             let res_json = await res.json()
 
+            if (res_json.text == undefined){
+                state = UploadState.Failed
+            } else{
+                state = UploadState.Success
+                setTranscript(res_json.text)
+            }
+
         } catch (error) {
             console.log(error)
             setTimeout(() => {
                 setUploaded(UploadState.NotUploaded)
-            }, 2000)
+            }, 4000)
         }
         finally{
             setTimeout(()=> {
