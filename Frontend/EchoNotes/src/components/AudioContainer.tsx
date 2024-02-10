@@ -89,42 +89,38 @@ const AudioContainer: React.FC<ContainerProps> = () => {
     return (
         <>
             <HeaderContainer />
-            <IonGrid >
-                <div className="audioContainer" id="container">
-                <IonRow>
-                    <IonCol>
-                        <div className="audioContainer__inner">
-                            <div className="inner_content">
-                                <div className="audioContainer__info">
-                                    {messages[isUploaded]}
-                                </div>
-                                <div className="buttons">
-                                    <IonButton onClick={uploadAudio} disabled={isUploaded === UploadState.NotUploaded ? false : true}>
-                                        <IonIcon icon={cloudUpload} slot="start"/>
-                                        Upload Audio
-                                    </IonButton>
-                                    <IonButton routerLink="/home/transcribed" disabled={isUploaded === UploadState.Success ? false : true}>
-                                        Go to Transcription
-                                    </IonButton>
-                                </div>
-                            </div>
+            <div className="audioContainer" id="container">
+                <div className="spacer"></div>
+                <div className="audioContainer__left">
+                    <div className="inner_content">
+                        <div className="audioContainer__info">
+                            {messages[isUploaded]}
                         </div>
-                    </IonCol>
-                    <IonCol size="3">
-                        <h2>Past Transcriptions</h2>
-                        <IonContent>
-                            <IonList>
-                                <IonItem>Lorem</IonItem> 
-                                <IonItem>Ipsum</IonItem> 
-                                <IonItem>Dolor</IonItem> 
-                                <IonItem>Emmet</IonItem> 
-                                <IonItem>Emmet</IonItem> 
-                            </IonList>
-                        </IonContent>
-                    </IonCol>
-                </IonRow>
+                        <div className="buttons">
+                            <IonButton onClick={uploadAudio} disabled={isUploaded === UploadState.NotUploaded ? false : true}>
+                                <IonIcon icon={cloudUpload} slot="start"/>
+                                Upload Audio
+                            </IonButton>
+                            <IonButton routerLink="/home/transcribed" disabled={isUploaded === UploadState.Success ? false : true}>
+                                Go to Transcription
+                            </IonButton>
+                        </div>
+                    </div>
+                </div>
+                <div className="spacer">    </div>
+                <div className="audioContainer__right">
+                    <h2>Past Transcriptions</h2>
+                    <div className="pastTranscriptions">
+                        <IonList>
+                            <IonItem>Lorem</IonItem> 
+                            <IonItem>Ipsum</IonItem> 
+                            <IonItem>Dolor</IonItem> 
+                            <IonItem>Emmet</IonItem> 
+                            <IonItem>Emmet</IonItem> 
+                        </IonList>
+                    </div>
+                </div>
             </div>
-            </IonGrid>
         </>
     )
 }

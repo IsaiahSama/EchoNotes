@@ -1,20 +1,37 @@
-.audioContainer__inner{
+.audioContainer{
+  display: flex;
+  justify-content: space-between;
+}
+
+.spacer{
+  flex: 1;
+}
+
+.audioContainer__left{
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 
 .audioContainer__info{
   border: 2px solid grey;
   min-width: 40%;
-  width: fit-content;
+  width: 100%;
   margin:auto;
   padding: 2em;
   margin-bottom: 0.2em;
+  text-align: center;
 }
 
 .pastTranscriptions{
   max-height: 50%;
   overflow-y: scroll;
+}
+
+@media only screen and (max-width: 600px) {
+  .audioContainer{
+    flex-direction: column;
+  }
 }
