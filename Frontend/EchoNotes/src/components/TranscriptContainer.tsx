@@ -31,6 +31,12 @@ const TranscriptContainer: React.FC<ContainerProps> = () => {
         setMessages(prevMessages => [new MessageObj("ai", "Beep"), new MessageObj("user", "Bop")])
     }, [])
 
+    const submitUserMessage = (ev: Event) => {
+        const value = (ev.target as HTMLInputElement).value;
+
+        setMessages(prevMessages => [...prevMessages, new MessageObj("user", value)])
+    } 
+
     return (
         <>
         <HeaderContainer />
@@ -44,7 +50,12 @@ const TranscriptContainer: React.FC<ContainerProps> = () => {
                             )
                         }
                     </div>
-                    <IonInput placeholder="Chat with the AI here"></IonInput>
+                    <IonInput
+                        placeholder="Chat with the AI here"
+                        onIonChange={(event) => submitUserMessage(event)}
+                        clearOnEdit={true}
+                        clearInput={true}
+                    ></IonInput>
             </div>
             <div className="transcriptContainer__right">
                 <h2>Transcribed Transcript</h2>
