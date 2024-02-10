@@ -31,7 +31,6 @@ setupIonicReact();
 const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
-      <HeaderContainer />
       <IonRouterOutlet>
         <TranscriptProvider>
           <Route exact path="/home" component={AudioContainer} />

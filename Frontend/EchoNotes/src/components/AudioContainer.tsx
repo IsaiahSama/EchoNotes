@@ -6,6 +6,7 @@ import {cloudUpload} from 'ionicons/icons'
 import "./AudioContainer.css"
 import '@ionic/react/css/core.css';
 import { FilePicker } from "@capawesome/capacitor-file-picker";
+import HeaderContainer from "./HeaderContainer";
 
 interface ContainerProps { }
 
@@ -81,47 +82,50 @@ const AudioContainer: React.FC<ContainerProps> = () => {
         finally{
             setTimeout(()=> {
                 setUploaded(state)
-            }, 2000)
+            }, 1000)
         }
     }
 
     return (
-        <IonGrid >
-            <div className="audioContainer" id="container">
-            <IonRow>
-                <IonCol>
-                    <div className="audioContainer__inner">
-                        <div className="inner_content">
-                            <div className="audioContainer__info">
-                                {messages[isUploaded]}
-                            </div>
-                            <div className="buttons">
-                                <IonButton onClick={uploadAudio} disabled={isUploaded === UploadState.NotUploaded ? false : true}>
-                                    <IonIcon icon={cloudUpload} slot="start"/>
-                                    Upload Audio
-                                </IonButton>
-                                <IonButton routerLink="/home/transcribed" disabled={isUploaded === UploadState.Success ? false : true}>
-                                    Go to Transcription
-                                </IonButton>
+        <>
+            <HeaderContainer />
+            <IonGrid >
+                <div className="audioContainer" id="container">
+                <IonRow>
+                    <IonCol>
+                        <div className="audioContainer__inner">
+                            <div className="inner_content">
+                                <div className="audioContainer__info">
+                                    {messages[isUploaded]}
+                                </div>
+                                <div className="buttons">
+                                    <IonButton onClick={uploadAudio} disabled={isUploaded === UploadState.NotUploaded ? false : true}>
+                                        <IonIcon icon={cloudUpload} slot="start"/>
+                                        Upload Audio
+                                    </IonButton>
+                                    <IonButton routerLink="/home/transcribed" disabled={isUploaded === UploadState.Success ? false : true}>
+                                        Go to Transcription
+                                    </IonButton>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </IonCol>
-                <IonCol size="3">
-                    <h2>Past Transcriptions</h2>
-                    <IonContent>
-                        <IonList>
-                            <IonItem>Lorem</IonItem> 
-                            <IonItem>Ipsum</IonItem> 
-                            <IonItem>Dolor</IonItem> 
-                            <IonItem>Emmet</IonItem> 
-                            <IonItem>Emmet</IonItem> 
-                        </IonList>
-                    </IonContent>
-                </IonCol>
-            </IonRow>
-        </div>
-        </IonGrid>
+                    </IonCol>
+                    <IonCol size="3">
+                        <h2>Past Transcriptions</h2>
+                        <IonContent>
+                            <IonList>
+                                <IonItem>Lorem</IonItem> 
+                                <IonItem>Ipsum</IonItem> 
+                                <IonItem>Dolor</IonItem> 
+                                <IonItem>Emmet</IonItem> 
+                                <IonItem>Emmet</IonItem> 
+                            </IonList>
+                        </IonContent>
+                    </IonCol>
+                </IonRow>
+            </div>
+            </IonGrid>
+        </>
     )
 }
 

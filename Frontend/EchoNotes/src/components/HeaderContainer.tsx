@@ -18,9 +18,7 @@ const HeaderContainer: React.FC<HeaderProps> = ( ) => {
         </IonList>
         </IonToolbar>
         </IonHeader>
-        <IonContent className='ion-padding'>
-            <p>Welcome to Echo Notes. Press buttons and hope for the best!</p>
-        </IonContent>
+        <p>Welcome to Echo Notes. Press buttons and hope for the best!</p>
         </>
         
     )
