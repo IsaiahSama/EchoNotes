@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { IonButton, IonCol, IonContent, IonGrid, IonIcon, IonItem, IonList, IonProgressBar, IonRow } from "@ionic/react";
-
+import { TranscriptContext} from "../TranscriptContext";
 import {cloudUpload} from 'ionicons/icons'
 
 import "./AudioContainer.css"
@@ -10,7 +10,6 @@ import { FilePicker } from "@capawesome/capacitor-file-picker";
 interface ContainerProps { }
 
 const AudioContainer: React.FC<ContainerProps> = () => {
-
     const url = "http://127.0.0.1:8000/"
 
     enum UploadState {
@@ -19,6 +18,14 @@ const AudioContainer: React.FC<ContainerProps> = () => {
         Success,
         Failed
     }
+
+    const transcriptContext = useContext(TranscriptContext)
+
+    if (!transcriptContext) {
+        throw new Error("TranscriptContainer must be used within a TranscriptProvider")
+    }
+
+    const {transcript, setTranscript} = transcriptContext
 
     const [isUploaded, setUploaded] = useState(UploadState.NotUploaded)
 

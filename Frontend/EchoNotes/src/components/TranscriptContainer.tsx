@@ -1,12 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./TranscriptContainer.css"
 import '@ionic/react/css/core.css';
 import { IonInput, IonContent, IonGrid, IonRow, IonCol } from "@ionic/react";
-
+import { TranscriptContext } from "../TranscriptContext";
 
 interface ContainerProps { }
 
 const TranscriptContainer: React.FC<ContainerProps> = () => {
+    const transcriptContext = useContext(TranscriptContext)
+
+    if (!transcriptContext) {
+        throw new Error("TranscriptContainer must be used within a TranscriptProvider")
+    }
+
+    const {transcript, setTranscript} = transcriptContext
+
     return (
         <div className="transcriptContainer">
             <IonGrid>
@@ -17,15 +25,6 @@ const TranscriptContainer: React.FC<ContainerProps> = () => {
                                 <div id="chatArea" className="transcriptContainer__chat_area">
                                     <div className="aiMessage message">Beep</div>
                                     <div className="message userMessage">Bop</div>
-                                    <div className="aiMessage message">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perspiciatis sint dolores similique, adipisci iusto cum.</div>
-                                    <div className="aiMessage message">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perspiciatis sint dolores similique, adipisci iusto cum.</div>
-                                    <div className="aiMessage message">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perspiciatis sint dolores similique, adipisci iusto cum.</div>
-                                    <div className="aiMessage message">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perspiciatis sint dolores similique, adipisci iusto cum.</div>
-                                    <div className="aiMessage message">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perspiciatis sint dolores similique, adipisci iusto cum.</div>
-                                    <div className="aiMessage message">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perspiciatis sint dolores similique, adipisci iusto cum.</div>
-                                    <div className="aiMessage message">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perspiciatis sint dolores similique, adipisci iusto cum.</div>
-                                    <div className="aiMessage message">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perspiciatis sint dolores similique, adipisci iusto cum.</div>
-                                    <div className="aiMessage message">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perspiciatis sint dolores similique, adipisci iusto cum.</div>
                                 </div>
                                 <IonInput placeholder="Chat with the AI here"></IonInput>
                         </div>
@@ -34,9 +33,7 @@ const TranscriptContainer: React.FC<ContainerProps> = () => {
                         <div className="transcriptContainer__right">
                             <h2>Transcribed Transcript</h2>
                             <div className="transcriptContainer__transcriptArea" id="transcriptArea">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum non maiores totam laboriosam harum quam recusandae dolores nostrum velit sunt, quas, omnis voluptatem explicabo accusantium minima provident? Deleniti, reiciendis inventore.
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum non maiores totam laboriosam harum quam recusandae dolores nostrum velit sunt, quas, omnis voluptatem explicabo accusantium minima provident? Deleniti, reiciendis inventore.
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum non maiores totam laboriosam harum quam recusandae dolores nostrum velit sunt, quas, omnis voluptatem explicabo accusantium minima provident? Deleniti, reiciendis inventore.
+                                {transcript}
                             </div>
                         </div>
                     </IonCol>
