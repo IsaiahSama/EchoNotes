@@ -11,6 +11,7 @@ interface ContainerProps { }
 const TranscriptContainer: React.FC<ContainerProps> = () => {
     const transcriptContext = useContext(TranscriptContext)
     const socketRef = useRef<Socket | null>(null)
+    const [action, setAction] = useState<string>("query")
 
     interface Message {
         sender: string;
@@ -56,9 +57,9 @@ const TranscriptContainer: React.FC<ContainerProps> = () => {
         }
     }, [])
 
-    const sendMessage = (text: string, socketType: string): boolean => {
+    const sendMessage = (text: string): boolean => {
         if(socketRef.current){
-            socketRef.current.emit(socketType, {data: text})
+            socketRef.current.emit(action, {data: text})
             return true
         } else{
             console.log("Something happened")
@@ -66,16 +67,30 @@ const TranscriptContainer: React.FC<ContainerProps> = () => {
         }
     }
 
-    const submitUserMessage = (type: string) => {
+    const submitUserMessage = () => {
         const element = document.getElementById("userInput")
         const value = (element as HTMLInputElement).value;
         (element as HTMLInputElement).value = ""
         if (value.trim().length == 0) return false
 
-        sendMessage(value, type)
+        sendMessage(value)
 
         setMessages(prevMessages => [...prevMessages, new MessageObj("user", value)])
     } 
+
+    const updateMessages = (message: MessageObj) => {
+        setMessages(prevMessages => [...prevMessages, message])
+    }
+
+    const changeAction = (newAction:string) => {
+        if (newAction == "query"){
+            updateMessages(new MessageObj("ai", "Your messages will now ask me questions about the transcript."))
+        }
+        else {
+            updateMessages(new MessageObj("ai", "Your messages will now modify the transcript."))
+        }
+        setAction(newAction)
+    }
 
     return (
         <>
@@ -93,12 +108,12 @@ const TranscriptContainer: React.FC<ContainerProps> = () => {
                         </div>
                         <IonInput
                             placeholder="Chat with the AI here"
-                            // onIonChange={() => submitUserMessage("query")}
+                            onIonChange={() => submitUserMessage()}
                             id="userInput"
                         ></IonInput>
                         <div className="flexed">
-                            <IonButton style={{width: "40%"}} onClick={() => submitUserMessage("query")}>Ask Query</IonButton>
-                            <IonButton style={{width: "40%"}} onClick={() => submitUserMessage("modify")}>Modify Transcript</IonButton>
+                            <IonButton style={{width: "40%"}} onClick={() => changeAction("query")} disabled={action === "query" ? true : false}>Ask Query</IonButton>
+                            <IonButton style={{width: "40%"}} onClick={() => changeAction("modify")} disabled={action === "modify" ? true : false}>Modify Transcript</IonButton>
                             <IonButton style={{width: "20%"}} onClick={() => setMessages([])}>Clear Messages</IonButton>
                         </div>
                 </div>
