@@ -1,14 +1,16 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import "./TranscriptContainer.css"
 import '@ionic/react/css/core.css';
-import { IonInput, IonContent, IonGrid, IonRow, IonCol } from "@ionic/react";
+import { IonInput } from "@ionic/react";
 import { TranscriptContext } from "../TranscriptContext";
 import HeaderContainer from "./HeaderContainer";
+import io, { Socket } from "socket.io-client";
 
 interface ContainerProps { }
 
 const TranscriptContainer: React.FC<ContainerProps> = () => {
     const transcriptContext = useContext(TranscriptContext)
+    const socketRef = useRef<Socket | null>(null)
 
     interface Message {
         sender: string;
@@ -29,11 +31,38 @@ const TranscriptContainer: React.FC<ContainerProps> = () => {
 
     useEffect(() => {
         setMessages(prevMessages => [new MessageObj("ai", "Beep"), new MessageObj("user", "Bop")])
+        
+        socketRef.current = io("http://127.0.0.1:8000")
+
+        socketRef.current.on("handshake", (data):boolean => {
+            console.log(data)
+            return true
+        })
+
+        socketRef.current.on("message", (data):boolean => {
+            console.log("Message received")
+            setMessages(prevMessages => [...prevMessages, new MessageObj("ai", data['data'])])
+            return true;
+        })
+
+        return () => {
+            if(socketRef.current){
+                socketRef.current.disconnect()
+            }
+        }
     }, [])
+
+    const sendMessage = (text: string) => {
+        if(socketRef.current){
+            socketRef.current.emit('message', {data: text})
+        } else{
+            console.log("Something happened")
+        }
+    }
 
     const submitUserMessage = (ev: Event) => {
         const value = (ev.target as HTMLInputElement).value;
-
+        sendMessage(value)
         setMessages(prevMessages => [...prevMessages, new MessageObj("user", value)])
     } 
 

@@ -50,3 +50,10 @@ async def connect(sid:int, environ, auth):
 @sio.on("disconnect")
 async def disconnect(sid:int):
     pass
+
+responses = ["Hello there", "Welcome", "Beep Bop Boop", "Pineapples are tasty"]
+
+@sio.on("message")
+async def message(sid:int, data:dict):
+    print("Message received from user:", data["data"])
+    await sio.emit("message", {"data": choice(responses)}, to=sid)
