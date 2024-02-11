@@ -66,7 +66,10 @@ async def handshake(sid:int, data:dict):
 
 responses = ["Hello there", "Welcome", "Beep Bop Boop", "Pineapples are tasty"]
 
-@sio.on("message")
-async def message(sid:int, data:dict):
-    print("Message received from user:", data["data"])
-    await sio.emit("message", {"data": choice(responses)}, to=sid)
+@sio.on("modify")
+async def modify(sid:int, data:dict):
+    print("Was told to modify", data['data'])
+
+@sio.on("query")
+async def query(sid:int, data:dict):
+    print("Was told to query", data['data'])
