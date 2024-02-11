@@ -8,6 +8,8 @@ fastapi = {extras = ["all"] }
 speechrecognition = "*"
 python-multipart = "*"
 python-socketio = "*"
+transformers = "*"
+torch = "*"
 
 [dev-packages]
 
