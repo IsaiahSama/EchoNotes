@@ -7,6 +7,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from transcribe import recognize
+from service import Model
 
 app = FastAPI()
 
@@ -43,13 +44,25 @@ async def transcribe(audio_file: Annotated[UploadFile, File()]):
     results = recognize(file)
     return results
 
+# Dictionary maps session ids to llm models
+llm_models = {}
+
 @sio.on("connect")
 async def connect(sid:int, environ, auth):
-    print("Client connected")
+    print("User with ID", sid, "has connected")
 
 @sio.on("disconnect")
 async def disconnect(sid:int):
-    pass
+    if sid in llm_models:
+        del llm_models[sid]
+    print("User with ID", sid, "has disconnected")
+
+@sio.on("handshake")
+async def handshake(sid:int, data:dict):
+    # Create Model for user
+    user_model = Model(sid, transcript=data["transcript"])
+    llm_models[sid] = user_model
+    await sio.emit("handshake", {"text": "Handshake successful"})
 
 responses = ["Hello there", "Welcome", "Beep Bop Boop", "Pineapples are tasty"]
 
