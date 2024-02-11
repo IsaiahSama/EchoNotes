@@ -91,7 +91,7 @@ const TranscriptContainer: React.FC<ContainerProps> = () => {
             <div className="transcriptContainer__right">
                 <h2>Transcribed Transcript</h2>
                 <div className="transcriptContainer__transcriptArea" id="transcriptArea">
-                    {transcript}
+                    {transcript || "No transcript. Return to Upload page."}
                 </div>
             </div>
         </div>
