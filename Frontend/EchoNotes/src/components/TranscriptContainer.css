@@ -10,14 +10,15 @@
 }
 
 .transcriptContainer__right{
-  flex: 1;
+  flex: 1.5;
 }
 
 .transcriptContainer__chat_area{
   background: #161616;
   padding: 0.7em;
   border-radius: 1%;
-  max-height: 60%;
+  height: 20%;
+  max-height: 60vh;
   overflow-y: scroll;
 }
 
