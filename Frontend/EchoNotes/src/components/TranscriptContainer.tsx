@@ -62,6 +62,8 @@ const TranscriptContainer: React.FC<ContainerProps> = () => {
 
     const submitUserMessage = (ev: Event) => {
         const value = (ev.target as HTMLInputElement).value;
+        (ev.target as HTMLInputElement).value = ""
+        if (value.trim().length == 0) return false
         sendMessage(value)
         setMessages(prevMessages => [...prevMessages, new MessageObj("user", value)])
     } 
