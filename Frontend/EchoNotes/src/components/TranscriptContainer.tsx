@@ -39,15 +39,25 @@ const TranscriptContainer: React.FC<ContainerProps> = () => {
         
         socketRef.current = io("http://127.0.0.1:8000")
 
-        socketRef.current.on("handshake", (data):boolean => {
+        socketRef.current.on("handshake", (data) => {
             console.log(data)
-            return true
+            return null
         })
 
-        socketRef.current.on("message", (data):boolean => {
+        socketRef.current.on("message", (data) => {
             console.log("Message received")
-            setMessages(prevMessages => [...prevMessages, new MessageObj("ai", data['data'])])
-            return true;
+            updateMessages(new MessageObj("ai", data['text']))
+            return null;
+        })
+
+        socketRef.current.on("query", (data) => {
+            updateMessages(new MessageObj("ai", data['text']))
+            return null;
+        })
+
+        socketRef.current.on("modify", (data) => {
+            setTranscript(data['text'])
+            return null;
         })
 
         return () => {
@@ -59,7 +69,7 @@ const TranscriptContainer: React.FC<ContainerProps> = () => {
 
     const sendMessage = (text: string): boolean => {
         if(socketRef.current){
-            socketRef.current.emit(action, {data: text})
+            socketRef.current.emit(action, {text})
             return true
         } else{
             console.log("Something happened")
@@ -75,7 +85,7 @@ const TranscriptContainer: React.FC<ContainerProps> = () => {
 
         sendMessage(value)
 
-        setMessages(prevMessages => [...prevMessages, new MessageObj("user", value)])
+        updateMessages(new MessageObj("user", value))
     } 
 
     const updateMessages = (message: MessageObj) => {
