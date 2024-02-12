@@ -1,4 +1,6 @@
-from transformers import GPT2LMHeadModel, GPT2Tokenizer
+from transformers import GPT2LMHeadModel, GPT2Tokenizer, set_seed
+from random import randint
+import torch
 
 class Model:
     """
@@ -16,6 +18,8 @@ class Model:
         self.conversation = conversation
         self.original_transcript = transcript
         self.transcript = transcript
+        self.torch_device = "cuda" if torch.cuda.is_available() else "cpu"
+        
         self.setup_models = self.setup_model()
 
         self.tokenizer: GPT2Tokenizer = self.setup_models[0]
@@ -27,10 +31,18 @@ class Model:
         Return:
             tuple (GPT2Tokenizer, GPT2LMHeadModel): The instance of the setup tokenizer and model"""
         
+        set_seed(randint(10, 1000))
+        
         # Load the GPT-2 model
         model_name = "gpt2"
+
         tokenizer = GPT2Tokenizer.from_pretrained(model_name)
-        model = GPT2LMHeadModel.from_pretrained(model_name, pad_token_id=tokenizer.eos_token_id)
+        model = GPT2LMHeadModel.from_pretrained(model_name, pad_token_id=tokenizer.eos_token_id).to(self.torch_device)
+        
+        for word in ["[RESPONSE]", "[ENDRESPONSE]", "[USER]", "[ENDUSER]", "[CONTEXT]", "[ENDCONTEXT]"]:
+            tokenizer.add_tokens(word)
+        
+        model.resize_token_embeddings(len(tokenizer))
         return tokenizer, model
 
     def get_original_transcript(self) -> str:
@@ -47,6 +59,7 @@ class Model:
 
     def clear_conversation(self):
         """Method used to clear the conversation."""
+
         self.conversation.clear()
 
     def modify_transcript(self, modification: str) -> str:
@@ -57,7 +70,8 @@ class Model:
         Returns:
             str: The modified transcript"""
 
-        response = self.generate_response(modification + "\n\n" + self.transcript)
+        response = self.generate_response(self.transcript + "\n\n" + modification)
+        self.transcript = response
         return response
     
     def query_transcript(self, query: str) -> str:
@@ -70,11 +84,12 @@ class Model:
             str: The model's response"""
         
         self.update_conversation(query)
-        response = self.generate_response(self.transcript + "\n\n" + query)
+        response = self.generate_response(query, 50)
+        # response = self.generate_response(self.transcript + "\n\n" + query, 50)
         return response
     
 
-    def generate_response(self, prompt: str) -> str:
+    def generate_response(self, prompt: str, max_length:int) -> str:
         """This method generates a response from the model given a prompt.
         
         Args:
@@ -83,15 +98,24 @@ class Model:
         Returns:
             str: The model's output"""
 
+
         tokenized = self.tokenizer.encode(prompt, return_tensors="pt")
+        
+        with torch.no_grad():
+            # generate the response
+            responses = self.model.generate(
+                tokenized,
+                max_length=200,
+                # num_beams=10,  # Adjust the number of beams
+                # no_repeat_ngram_size=3,  # Adjust the no-repeat n-grams size
+                # temperature=0.8,
+                # early_stopping=True,
+                top_k=0,
+                top_p=0.92,
+                do_sample=True,
+            ).to(self.torch_device)
 
-        # generate the response
-        responses = self.model.generate(
-            tokenized,
-            max_length=10000,
-            num_beams=10,
-            no_repeat_ngram_size=3,
-        )
-
-        final_response = "\n".join([self.tokenizer.decode(response, skip_special_tokens=True) for response in responses])
-        return final_response
+            text = self.tokenizer.decode(responses[0], skip_special_tokens=True)
+        if self.transcript and text.startswith(self.transcript):
+            text = text.split(self.transcript)[-1] 
+        return text
