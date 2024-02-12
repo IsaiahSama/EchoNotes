@@ -7,7 +7,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from transcribe import recognize
-from service import Model
+from gptservice import Model
 
 app = FastAPI()
 
@@ -64,15 +64,13 @@ async def handshake(sid:int, data:dict):
     user_model = Model(sid, transcript=data["transcript"])
     llm_models[sid] = user_model
 
-responses = ["Hello there", "Welcome", "Beep Bop Boop", "Pineapples are tasty"]
-
 @sio.on("modify")
 async def modify(sid:int, data:dict):
     if not sid in llm_models:
         return {"text": "User doesn't have a model."}
     model: Model = llm_models[sid]
     response: str = model.modify_transcript(data['text'])
-    await sio.emit("modify", {"text": "Change the above text to be like: " + response})
+    await sio.emit("modify", {"text": response})
 
 
 @sio.on("query")
@@ -81,6 +79,6 @@ async def query(sid:int, data:dict):
         return {"text": "User doesn't have a model."}
     model: Model = llm_models[sid]
     print("Making query.")
-    response: str = model.query_transcript("Based on the above text: " + data['text'])
+    response: str = model.query_transcript(data['text'])
     print("Query successful!", response)
     await sio.emit("query", {"text": response})
