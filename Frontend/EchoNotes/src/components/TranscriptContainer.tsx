@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import "./TranscriptContainer.css"
 import '@ionic/react/css/core.css';
-import { IonButton, IonButtons, IonContent, IonInput } from "@ionic/react";
+import { IonButton, IonButtons, IonContent, IonInput, IonSpinner } from "@ionic/react";
 import { TranscriptContext } from "../TranscriptContext";
 import HeaderContainer from "./HeaderContainer";
 import io, { Socket } from "socket.io-client";
@@ -12,6 +12,8 @@ const TranscriptContainer: React.FC<ContainerProps> = () => {
     const transcriptContext = useContext(TranscriptContext)
     const socketRef = useRef<Socket | null>(null)
     const [action, setAction] = useState<string>("query")
+
+    const[processing, setProcessing] = useState<boolean>(false)
 
     interface Message {
         sender: string;
@@ -40,7 +42,7 @@ const TranscriptContainer: React.FC<ContainerProps> = () => {
         socketRef.current = io("http://127.0.0.1:8000")
 
         socketRef.current.on("handshake", (data) => {
-            console.log(data)
+            socketRef.current?.emit("handshake", {transcript})
             return null
         })
 
@@ -51,12 +53,16 @@ const TranscriptContainer: React.FC<ContainerProps> = () => {
         })
 
         socketRef.current.on("query", (data) => {
+            console.log("Query received.")
             updateMessages(new MessageObj("ai", data['text']))
+            setProcessing(false)
             return null;
         })
 
         socketRef.current.on("modify", (data) => {
+            console.log("Modification received")
             setTranscript(data['text'])
+            setProcessing(false)
             return null;
         })
 
@@ -72,7 +78,6 @@ const TranscriptContainer: React.FC<ContainerProps> = () => {
             socketRef.current.emit(action, {text})
             return true
         } else{
-            console.log("Something happened")
             return false
         }
     }
@@ -84,7 +89,7 @@ const TranscriptContainer: React.FC<ContainerProps> = () => {
         if (value.trim().length == 0) return false
 
         sendMessage(value)
-
+        setProcessing(true)
         updateMessages(new MessageObj("user", value))
     } 
 
@@ -116,6 +121,7 @@ const TranscriptContainer: React.FC<ContainerProps> = () => {
                                 )
                             }
                         </div>
+                        <IonSpinner name="dots" style={{"display": processing === true ? "block" : "none"}} />
                         <IonInput
                             placeholder="Chat with the AI here"
                             onIonChange={() => submitUserMessage()}
