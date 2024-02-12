@@ -1,14 +1,20 @@
 from random import choice
 import socketio
 
+import uvicorn
+
 from typing import Annotated
+from os import environ
 from fastapi import FastAPI, UploadFile, File, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 
+from dotenv import load_dotenv
+
 from transcribe import recognize
 from gptservice import Model
 
+load_dotenv()
 app = FastAPI()
 
 origins = ["http://localhost:8100"]
@@ -82,3 +88,7 @@ async def query(sid:int, data:dict):
     response: str = model.query_transcript(data['text'])
     print("Query successful!", response)
     await sio.emit("query", {"text": response})
+
+if __name__ == "__main__":
+    port = int(environ.get("PORT", 8000))
+    uvicorn.run("app:app", host="0.0.0.0", port=port, reload=True)
